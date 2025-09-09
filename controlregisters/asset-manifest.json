@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ecen260/controlregisters/static/css/main.45065c22.css",
+    "main.js": "/ecen260/controlregisters/static/js/main.8c646a09.js",
+    "index.html": "/ecen260/controlregisters/index.html",
+    "main.45065c22.css.map": "/ecen260/controlregisters/static/css/main.45065c22.css.map",
+    "main.8c646a09.js.map": "/ecen260/controlregisters/static/js/main.8c646a09.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.45065c22.css",
+    "static/js/main.8c646a09.js"
+  ]
+}
