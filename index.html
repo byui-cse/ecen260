@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BYU-I ECEN 260 Learning Apps</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 50px;
+            opacity: 0.8;
+        }
+
+        .apps-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .app-link {
+            display: block;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-decoration: none;
+            padding: 25px 30px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .app-link:hover::before {
+            left: 100%;
+        }
+
+        .app-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .app-link:nth-child(2) {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            box-shadow: 0 5px 15px rgba(250, 112, 154, 0.3);
+        }
+
+        .app-link:nth-child(2):hover {
+            box-shadow: 0 10px 25px rgba(250, 112, 154, 0.4);
+        }
+
+        .app-link:nth-child(3) {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            box-shadow: 0 5px 15px rgba(168, 237, 234, 0.3);
+        }
+
+        .app-link:nth-child(3):hover {
+            box-shadow: 0 10px 25px rgba(168, 237, 234, 0.4);
+        }
+
+        .app-title {
+            display: block;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .app-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 30px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .app-link {
+                padding: 20px 25px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BYU-I ECEN 260 Learning Apps</h1>
+        <p class="subtitle">Interactive tools for ARM32 Assembly Language and the STM32L476RG Microcontroller</p>
+        
+        <div class="apps-grid">
+            <a href="/emulator" class="app-link">
+                <span class="app-title">Emulator</span>
+                <span class="app-description">Step through ARM32 assembly code to see the effect on registers and memory</span>
+            </a>
+            
+            <a href="/immediates" class="app-link">
+                <span class="app-title">Immediates</span>
+                <span class="app-description">Practice with moving "immediate" values into registers</span>
+            </a>
+            
+            <a href="/controlregisters" class="app-link">
+                <span class="app-title">Control Registers</span>
+                <span class="app-description">Explore control register functionality on the STM32L476RG</span>
+            </a>
+        </div>
+        
+        <div class="footer">
+            Click on any app above to get started
+        </div>
+    </div>
+</body>
+</html>
