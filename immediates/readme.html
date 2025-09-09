@@ -1,0 +1,562 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECEN 260 ARM32 Emulator Documentation (BYU-Idaho) [v1.4]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8">ECEN 260 ARM32 Emulator Documentation (BYU-Idaho) [v1.4]</h1>
+        
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Overview</h2>
+            <p>This ARM32 Assembly Emulator is a web-based tool designed to help students learn and practice ARM32 assembly programming. It supports a subset of ARM32 instructions, provides a visual representation of registers and memory, and includes support for conditional execution and memory operations.</p>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Supported Instructions</h2>
+            <p>The emulator supports the following ARM32 instructions:</p>
+            <ul class="list-disc pl-6 mt-2">
+                <li>MOV (Move)</li>
+                <li>MOVT (Move Top)</li>
+                <li>ADD (Add)</li>
+                <li>SUB (Subtract)</li>
+                <li>CMP (Compare)</li>
+                <li>MUL (Multiply)</li>
+                <li>SDIV (Signed Division)</li>
+                <li>UDIV (Unsigned Division)</li>
+                <li>AND (Bitwise AND)</li>
+                <li>ORR (Bitwise OR)</li>
+                <li>EOR (Bitwise XOR)</li>
+                <li>MVN (Bitwise NOT)</li>
+                <li>NEG (Negate)</li>
+                <li>LSL (Logical Shift Left)</li>
+                <li>LSR (Logical Shift Right)</li>
+                <li>ASR (Arithmetic Shift Right)</li>
+                <li>LDR (Load from Memory)</li>
+                <li>STR (Store to Memory)</li>
+                <li>LDRB (Load Register Byte)</li>
+                <li>LDRH (Load Register Halfword)</li>
+                <li>STRB (Store Register Byte)</li>
+                <li>STRH (Store Register Halfword)</li>
+                <li>B (Branch)</li>
+                <li>BL (Branch with Link)</li>
+                <li>BX (Branch and Exchange)</li>
+                <li>PUSH (Push onto Stack)</li>
+                <li>POP (Pop from Stack)</li>
+                <li>PRINT (Custom instruction for debugging)</li>
+            </ul>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Conditional Execution</h2>
+            <p>The emulator supports conditional execution for almost all instructions. Conditions can be appended to instructions to control whether it executes based on the state of the APSR (Application Program Status Register) flags.</p>
+            <p>Some of the supported condition codes:</p>
+            <ul class="list-disc pl-6 mt-2">
+                <li>EQ: Equal (Z flag is set)</li>
+                <li>NE: Not Equal (Z flag is clear)</li>
+                <li>GT: Signed Greater Than (Z flag is clear AND N equals V)</li>
+                <li>GE: Signed Greater Than or Equal (N flag equals V flag)</li>
+                <li>LT: Signed Less Than (N flag is not equal to V flag)</li>
+                <li>LE: Signed Less Than or Equal (Z flag is set OR N is not equal to V)</li>
+            </ul>
+            <p>Example usage:</p>
+            <pre class="bg-gray-200 p-2 rounded mt-2">
+ADDEQ R0, R1, R2  ; Add R1 and R2 into R0 only if the Z flag is set (i.e., the previous comparison was 'equal')
+MOVNE R0, #0      ; Move 0 into R0 only if the Z flag is clear (i.e., the previous comparison was 'not equal')
+            </pre>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Instruction Syntax and Examples</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">MOV (Move)</h3>
+                <p>Moves a value into a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+MOV R0, #10        ; Move decimal 10 to R0
+MOV R1, R0         ; Copy value from R0 to R1
+MOV R2, #0xFF      ; Move hexadecimal FF to R2
+MOV R3, #0b1010    ; Move binary 1010 to R3
+MOVS R4, #5        ; Move 5 to R4 and update flags
+MOVEQ R5, #1       ; Move 1 to R5 if the Z flag is set (i.e., the previous comparison was 'equal')
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">MOVT (Move Top)</h3>
+                <p>Moves a value into the top half of a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+MOVT R0, #0xFFFF   ; Move 0xFFFF to top half of R0
+MOVT R1, #0x123    ; Move 0x0123 to top half of R1
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">ADD (Add)</h3>
+                <p>Adds two values and stores the result in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+ADD R0, R1, R2     ; R0 = R1 + R2
+ADD R0, R0, #5     ; R0 = R0 + 5
+ADD R1, #10        ; R1 = R1 + 10
+ADDS R2, R3, R4    ; R2 = R3 + R4 and update flags
+ADDNE R5, R6, #3   ; R5 = R6 + 3 if the Z flag is clear
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">SUB (Subtract)</h3>
+                <p>Subtracts one value from another and stores the result in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+SUB R0, R1, R2     ; R0 = R1 - R2
+SUB R0, R0, #5     ; R0 = R0 - 5
+SUB R1, #10        ; R1 = R1 - 10
+SUBS R2, R3, R4    ; R2 = R3 - R4 and update flags
+SUBLT R5, R6, #3   ; R5 = R6 - 3 if N flag is not equal to V flag
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">CMP (Compare)</h3>
+                <p>Compares two values and sets the condition flags in the APSR.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+CMP R0, R1         ; Compare R0 with R1
+CMP R0, #10        ; Compare R0 with 10
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">MUL (Multiply)</h3>
+                <p>Multiplies two values and stores the result in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+MUL R0, R1, R2     ; R0 = R1 * R2
+MULS R3, R4, R5    ; R3 = R4 * R5 and update flags
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">SDIV (Signed Division)</h3>
+                <p>Performs signed division of two values and stores the result in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+SDIV R0, R1, R2    ; R0 = R1 / R2 (signed)
+SDIV R3, R4, #5    ; R3 = R4 / 5 (signed)
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">UDIV (Unsigned Division)</h3>
+                <p>Performs unsigned division of two values and stores the result in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+UDIV R0, R1, R2    ; R0 = R1 / R2 (unsigned)
+UDIV R3, R4, #5    ; R3 = R4 / 5 (unsigned)
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">AND (Bitwise AND)</h3>
+                <p>Performs a bitwise AND operation and stores the result in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+AND R0, R1, R2     ; R0 = R1 & R2
+AND R0, R0, #0xF   ; R0 = R0 & 0xF
+ANDS R3, R4, #0xFF ; R3 = R4 & 0xFF and update flags
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">ORR (Bitwise OR)</h3>
+                <p>Performs a bitwise OR operation and stores the result in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+ORR R0, R1, R2     ; R0 = R1 | R2
+ORR R0, R0, #0xF0  ; R0 = R0 | 0xF0
+ORRS R3, R4, #0xFF ; R3 = R4 | 0xFF and update flags
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">EOR (Bitwise XOR)</h3>
+                <p>Performs a bitwise XOR operation and stores the result in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+EOR R0, R1, R2     ; R0 = R1 ^ R2
+EOR R0, R0, #0xFF  ; R0 = R0 ^ 0xFF
+EORS R3, R4, #0xAA ; R3 = R4 ^ 0xAA and update flags
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">MVN (Bitwise NOT)</h3>
+                <p>Performs a bitwise NOT operation and stores the result in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+MVN R0, R1         ; R0 = ~R1
+MVN R0, #0xF       ; R0 = ~0xF
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">NEG (Negate)</h3>
+                <p>Negates a value and stores the result in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+NEG R3, #4         ; R3 = -4
+NEG R0, R1         ; R0 = -R1
+                </pre>
+            </div>
+
+
+
+
+
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">LSL (Logical Shift Left)</h3>
+                <p>Performs a logical left shift on a value.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+LSL R0, R1, #2     ; R0 = R1 << 2 (shifted left by 2 bits)
+LSL R0, R1, R2     ; R0 = R1 << R2 (shifted left by the value in R2)
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">LSR (Logical Shift Right)</h3>
+                <p>Performs a logical right shift on a value.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+LSR R0, R1, #2     ; R0 = R1 >> 2 (shifted right by 2 bits)
+LSR R0, R1, R2     ; R0 = R1 >> R2 (shifted right by the value in R2)
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">ASR (Arithmetic Shift Right)</h3>
+                <p>Performs an arithmetic right shift on a value.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+ASR R0, R1, #2     ; R0 = R1 >> 2 (shifted right by 2 bits, preserving sign)
+ASR R0, R1, R2     ; R0 = R1 >> R2 (shifted right by the value in R2, preserving sign)
+                </pre>
+            </div>
+            
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">LDR (Load from Memory)</h3>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+LDR R2, [R0]       ; Load word from Memory at address R0 into R2
+LDR R2, [R0, #4]   ; Load word from Memory at address R0+4 into R2
+LDR R4, [R5, R6]   ; Load word from Memory at address R5+R6 into R4
+LDR R7, [R8, #4]!  ; Pre-indexed: R8 = R8 + 4, then load word from Memory at new R8 into R7
+LDR R9, [R10], #4  ; Post-indexed: Load word at R10 into R9, then R10 = R10 + 4
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">STR (Store to Memory)</h3>
+                <p>Stores a value from a register into memory.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+STR R0, [R1]       ; Store word in R0 to Memory at address in R1
+STR R2, [R3, #8]   ; Store word in R2 to Memory at address R3+8
+STR R4, [R5, R6]   ; Store word in R4 to Memory at address R5+R6
+STR R7, [R8, #4]!  ; Pre-indexed: R8 = R8 + 4, then store word in R7 to Memory at new R8
+STR R9, [R10], #4  ; Post-indexed: Store word in R9 to Memory at at address in R10, then update R10 = R10 + 4
+                </pre>
+            </div>
+
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">LDRB (Load Register Byte)</h3>
+                <p>Loads a byte from memory into a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+LDRB R0, [R1]      ; Load byte at address in R1 into R0
+LDRB R2, [R3, #1]  ; Load byte at address R3+1 into R2
+LDRB R4, [R5, R6]  ; Load byte at address R5+R6 into R4
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">LDRH (Load Register Halfword)</h3>
+                <p>Loads a halfword (16 bits) from memory into a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+LDRH R0, [R1]      ; Load halfword at address in R1 into R0
+LDRH R2, [R3, #2]  ; Load halfword at address R3+2 into R2
+LDRH R4, [R5, R6]  ; Load halfword at address R5+R6 into R4
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">STRB (Store Register Byte)</h3>
+                <p>Stores a byte from a register into memory.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+STRB R0, [R1]      ; Store lowest byte of R0 to address in R1
+STRB R2, [R3, #1]  ; Store lowest byte of R2 to address R3+1
+STRB R4, [R5, R6]  ; Store lowest byte of R4 to address R5+R6
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">STRH (Store Register Halfword)</h3>
+                <p>Stores a halfword (16 bits) from a register into memory.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+STRH R0, [R1]      ; Store lowest halfword of R0 to address in R1
+STRH R2, [R3, #2]  ; Store lowest halfword of R2 to address R3+2
+STRH R4, [R5, R6]  ; Store lowest halfword of R4 to address R5+R6
+                </pre>
+            </div>
+            
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">B (Branch)</h3>
+                <p>Branches to a specified label.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+B label            ; Branch to label
+BEQ label          ; Branch to label if equal (Z flag is set)
+BNE label          ; Branch to label if not equal (Z flag is clear)
+BLT label          ; Branch to label if less than (N flag is not equal to V flag)
+BGT label          ; Branch to label if greater than (Z flag is clear AND N equals V)
+BLE label          ; Branch to label if less than or equal (Z flag is set OR N is not equal to V)
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">BL (Branch with Link)</h3>
+                <p>Branches to a specified label and stores the return address in LR.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+BL subroutine      ; Branch to subroutine and store return address in LR
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">BX (Branch and Exchange)</h3>
+                <p>Branches to the address specified in a register.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+BX LR              ; Branch to the address stored in LR (typically used to return from a subroutine)
+                </pre>
+            </div>
+            
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">PUSH (Push onto Stack)</h3>
+                <p>Pushes registers onto the stack. The registers are stored in order, with the lowest numbered register at the lowest memory address.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+PUSH {R0}  ; Pushes the 4-byte contents of R0 onto the stack
+PUSH {R4, R5, R6}  ; Push R4, R5, and R6 onto the stack (R4 at lowest address, R6 at highest)
+PUSH {R0-R3, LR}   ; Push R0, R1, R2, R3, and LR onto the stack
+PUSH {R0-R12, LR}  ; Push all general-purpose registers and LR onto the stack
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">POP (Pop from Stack)</h3>
+                <p>Pops values from the stack into registers. The registers are loaded in order, with the lowest numbered register loaded from the lowest memory address.</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+POP {R0}  ; Pops the 4-byte value at the top of the stack into R0
+POP {R4, R5, R6}   ; Pop values from stack into R4, R5, and R6 (R4 from lowest address, R6 from highest)
+POP {R0-R3, PC}    ; Pop values from stack into R0, R1, R2, R3, and PC
+POP {R0-R12, PC}   ; Pop values from stack into all general-purpose registers and PC
+                </pre>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">PRINT (Custom Instruction)</h3>
+                <p>Prints the value of a register (not a standard ARM instruction, added for debugging).</p>
+                <pre class="bg-gray-200 p-2 rounded mt-2">
+PRINT R0           ; Print the value in R0
+                </pre>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Stack Operations</h2>
+            <p>The emulator implements a full, descending stack, following the ARM architecture:</p>
+            <ul class="list-disc pl-6 mt-2">
+                <li>The Stack Pointer (SP, R13) is initialized to 0x20018000.</li>
+                <li>The stack grows downwards in memory (from higher addresses to lower addresses).</li>
+                <li>PUSH decrements SP before storing each value.</li>
+                <li>POP loads each value and then increments SP.</li>
+                <li>Multiple registers can be pushed or popped in a single instruction.</li>
+                <li>Registers are stored/loaded in order, with the lowest numbered register at the lowest memory address within the relevant range.</li>
+            </ul>
+            <p>Examples:</p>
+            <pre class="bg-gray-200 p-2 rounded mt-2">
+PUSH {R0, R1, R2}  ; Pushes R0, R1, R2 onto the stack (R0 at lowest address, R2 at highest)
+POP {R0, R1, R2}   ; Pops values from stack into R0, R1, R2 (R0 from lowest address, R2 from highest)
+PUSH {R0-R3, LR}   ; Pushes R0, R1, R2, R3, and LR onto the stack
+POP {R0-R3, PC}    ; Pops values from stack into R0, R1, R2, R3, and PC
+            </pre>
+        </section>
+        
+<section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Immediate Values</h2>
+    <p>The emulator supports immediate values in various formats:</p>
+    <ul class="list-disc pl-6 mt-2">
+        <li>Decimal: No prefix required</li>
+        <li>Hexadecimal: Can use '0x' prefix or 'h' suffix</li>
+        <li>Binary: Can use '0b' prefix or 'b' suffix</li>
+    </ul>
+    <p>Examples of supported immediate value formats:</p>
+    <pre class="bg-gray-200 p-2 rounded mt-2">
+MOV R0, #42        ; Decimal
+MOV R1, #0xFF      ; Hexadecimal with '0x' prefix (8-bit)
+MOV R5, #0xFFFF    ; Hexadecimal with '0x' prefix (16-bit)
+MOV R2, #FFFFh     ; Hexadecimal with 'h' suffix (16-bit)
+MOV R3, #0b1010    ; Binary with '0b' prefix (4-bit)
+MOV R6, #1010b     ; Binary with 'b' suffix (4-bit)
+MOV R4, #11111111b ; Binary with 'b' suffix (8-bit)
+    </pre>
+    <p>Notes on immediate value usage:</p>
+    <ul class="list-disc pl-6 mt-2">
+        <li>For hexadecimal values, both uppercase and lowercase letters are supported (e.g., 0xFF and 0xff are equivalent).</li>
+        <li>The 'h' and 'b' suffixes must be immediately after the number, without any space.</li>
+        <li>When using the 'h' or 'b' suffix, do not include the '0x' or '0b' prefix.</li>
+        <li>The emulator will automatically handle sign extension for negative values when necessary.</li>
+        <li>For most instructions, immediate values are limited to 16 bits for MOV/MOVT and 12 bits for other instructions. The emulator will raise an error if the immediate value is out of range.</li>
+    </ul>
+</section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">APSR (Application Program Status Register) (Continued)</h2>
+            <p>These flags are updated by certain instructions (e.g., CMP) and are used for conditional execution. Instructions that can update the APSR flags typically have an 'S' suffix (e.g., ADDS, SUBS).</p>
+            <pre class="bg-gray-200 p-2 rounded mt-2">
+CMP R0, R1         ; Compare R0 and R1, updating APSR flags
+ADDS R2, R3, #1    ; Add 1 to R3, store in R2, and update APSR flags
+SUBS R4, R5, R6    ; Subtract R6 from R5, store in R4, and update APSR flags
+            </pre>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Memory Layout</h2>
+            <p>The emulator simulates two separate memory regions:</p>
+            <ul class="list-disc pl-6 mt-2">
+                <li>Code Memory: 0x00000000 - 0x00000100 (256 bytes)</li>
+                <li>Data Memory: 0x20000000 - 0x20018000 (not all bytes shown, just the top and bottom of the range)</li>
+            </ul>
+            <p>Instructions are stored in Code Memory, while data operations typically use Data Memory.</p>
+        </section>
+        
+        
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Memory Indexing Options</h2>
+            <p>The emulator supports various addressing modes for both load and store memory operations:</p>
+            <ul class="list-disc pl-6 mt-2">
+                <li>Offset addressing: [Rn, #offset]</li>
+                <li>Pre-indexed addressing: [Rn, #offset]!</li>
+                <li>Post-indexed addressing: [Rn], #offset</li>
+                <li>Register offset addressing: [Rn, Rm]</li>
+            </ul>
+            <pre class="bg-gray-200 p-2 rounded mt-2">
+LDR R0, [R1, #4]   ; Offset addressing (use address R1+4)
+LDR R0, [R1, #4]!  ; Pre-indexed addressing (use address R1+4, <i>and</i> change R1&#8592;R1+4)
+LDR R0, [R1], #4   ; Post-indexed addressing (use address R1, <i>then</i> change R1&#8592;R1+4)
+LDR R0, [R1, R2]   ; Register offset addressing (use address R1+R2)
+            </pre>
+        </section>
+        
+<section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Label Handling</h2>
+    <p>The emulator now provides improved support for labels in your assembly code:</p>
+    <ul class="list-disc pl-6 mt-2">
+        <li>Labels can be defined on their own line or at the beginning of an instruction line.</li>
+        <li>Labels are automatically detected and mapped to their corresponding memory addresses.</li>
+        <li>Branch instructions (B, BL, BEQ, BNE, etc.) can use these labels as targets.</li>
+        <li>The emulator maintains an internal label map for efficient branching operations.</li>
+    </ul>
+    <p>Example usage of labels:</p>
+    <pre class="bg-gray-200 p-2 rounded mt-2">
+loop:
+    ADD R0, R0, #1
+    CMP R0, #10
+    BLT loop
+
+end_loop:
+    MOV R1, #0
+    B end_loop  ; Infinite loop at the end
+    </pre>
+    <p>In this example, 'loop' and 'end_loop' are labels that can be used as branch targets.</p>
+</section>
+
+<section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Using the Link Register (LR) for Function Calling</h2>
+    <p>The Link Register (LR), also known as R14, plays a crucial role in function calling and returning in ARM assembly. Understanding how to use the LR effectively is essential for writing and working with subroutines.</p>
+
+    <h3 class="text-xl font-semibold mt-4 mb-2">Function Calling Process</h3>
+    <ol class="list-decimal pl-6 mb-4">
+        <li>When a function is called using the BL (Branch with Link) instruction, the address of the next instruction (return address) is automatically stored in the LR.</li>
+        <li>The program then branches to the function's address.</li>
+        <li>To return from the function, use the BX LR instruction, which branches to the address stored in the LR.</li>
+    </ol>
+
+    <h3 class="text-xl font-semibold mt-4 mb-2">Example: Simple Function Call</h3>
+    <pre class="bg-gray-200 p-2 rounded mt-2">
+    MOV R0, #5          ; Set up argument for the function
+    BL calculate_square ; Call the function
+    ; R0 now contains the result
+    ; Continue with the main program
+
+calculate_square:
+    MUL R0, R0, R0      ; Square the input value
+    BX LR               ; Return to the calling code
+    </pre>
+
+    <h3 class="text-xl font-semibold mt-4 mb-2">Nested Function Calls</h3>
+    <p>When dealing with nested function calls, you need to preserve the LR value on the stack:</p>
+    <pre class="bg-gray-200 p-2 rounded mt-2">
+main:
+    MOV R0, #5
+    BL outer_function
+    ; Continue with main program
+
+outer_function:
+    PUSH {LR}           ; Save LR on the stack
+    BL inner_function   ; Call another function
+    ; Do some work
+    POP {PC}            ; Return by popping directly into PC
+
+inner_function:
+    ; Do some work
+    BX LR               ; Return to outer_function
+    </pre>
+
+    <h3 class="text-xl font-semibold mt-4 mb-2">Best Practices</h3>
+    <ul class="list-disc pl-6 mt-2">
+        <li>Always use BL for function calls and BX LR for returns to ensure proper use of the LR.</li>
+        <li>In functions that call other functions, preserve LR on the stack at the beginning and restore it before returning.</li>
+        <li>Be aware that some instructions (like BL) modify the LR, so save it if you need to preserve its value.</li>
+        <li>When using the PUSH and POP instructions with multiple registers, you can include LR in the list for convenient saving and restoring.</li>
+    </ul>
+</section>
+
+<section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Visual Cues for LR, PC, and SP</h2>
+    <p>The emulator now provides visual indicators to help you quickly identify special registers and their values in both the register display and memory view:</p>
+    <ul class="list-disc pl-6 mt-2">
+        <li><strong>Link Register (LR, R14):</strong> 
+            <ul>
+                <li>In the register display: Highlighted with an orange border</li>
+                <li>In memory view: Memory locations containing the LR value are highlighted with an orange border</li>
+            </ul>
+        </li>
+        <li><strong>Program Counter (PC, R15):</strong>
+            <ul>
+                <li>In the register display: Highlighted with a yellow background</li>
+                <li>In code memory view: The current instruction (pointed to by PC) is highlighted with a yellow background</li>
+            </ul>
+        </li>
+        <li><strong>Stack Pointer (SP, R13):</strong>
+            <ul>
+                <li>In the register display: Highlighted with a purple border</li>
+                <li>In data memory view: The current top of the stack (pointed to by SP) is highlighted with a purple border</li>
+            </ul>
+        </li>
+    </ul>
+    <p>These visual cues make it easier to track the state of these important registers and their impact on program execution and memory state.</p>
+</section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Usage Tips</h2>
+            <ul class="list-disc pl-6 mt-2">
+                <li>Use the "Load Code" button to load your assembly code into the emulator.</li>
+                <li>The "Step" button allows you to execute one instruction at a time.</li>
+                <li>Use the "Reset Registers and Memory" button to clear all registers and memory.</li>
+                <li>The "Show Memory" toggle allows you to view or hide the memory display.</li>
+                <li>Use the memory display options to switch between 1-byte and 4-byte views, and to change the sorting order.</li>
+                <li>Pay attention to highlighted areas in the registers and memory displays, as they indicate recent changes.</li>
+                <li>Use the PRINT instruction to debug your code by printing register values.</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
