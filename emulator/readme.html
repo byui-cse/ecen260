@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECEN 260 ARM32 Emulator Documentation (BYU-Idaho) [v1.4]</title>
+    <title>ECEN 260 ARM32 Emulator Documentation (BYU-Idaho) [v1.5]</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold mb-8">ECEN 260 ARM32 Emulator Documentation (BYU-Idaho) [v1.4]</h1>
+        <h1 class="text-4xl font-bold mb-8">ECEN 260 ARM32 Emulator Documentation (BYU-Idaho) [v1.5]</h1>
         
         <section class="mb-8">
             <h2 class="text-2xl font-semibold mb-4">Overview</h2>
@@ -517,6 +517,15 @@ inner_function:
         <li>Be aware that some instructions (like BL) modify the LR, so save it if you need to preserve its value.</li>
         <li>When using the PUSH and POP instructions with multiple registers, you can include LR in the list for convenient saving and restoring.</li>
     </ul>
+</section>
+
+<section class="mb-8">
+	<h2 class="text-2xl font-semibold mb-4">Value Pre-loading</h2>
+	<ul class="list-disc pl-6 mt-2">
+		<li><strong>Register Pre-Load:</strong> You can initialize registers with hexadecimal values up to 4 bytes before execution by entering values in the pre-load section. Format: <code>R0: 0x10</code>, <code>SP: 0x20017FFC</code>.</li>
+		<li><strong>Memory Pre-Load:</strong> You can initialize data memory with 1-byte hexadecimal values before execution. Format: <code>0x20000000: 0x1234</code>.</li>
+	</ul>
+	<p class="mt-2">These enhancements make it easier to set up program conditions and test scenarios without manually stepping through initialization code.</p>
 </section>
 
 <section class="mb-8">
