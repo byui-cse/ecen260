@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/ecen260/emulator/static/css/main.5fc3501f.css",
-    "main.js": "/ecen260/emulator/static/js/main.f0c1a8f9.js",
+    "main.css": "/ecen260/emulator/static/css/main.49505bfd.css",
+    "main.js": "/ecen260/emulator/static/js/main.52d113a9.js",
     "index.html": "/ecen260/emulator/index.html",
-    "main.5fc3501f.css.map": "/ecen260/emulator/static/css/main.5fc3501f.css.map",
-    "main.f0c1a8f9.js.map": "/ecen260/emulator/static/js/main.f0c1a8f9.js.map"
+    "main.49505bfd.css.map": "/ecen260/emulator/static/css/main.49505bfd.css.map",
+    "main.52d113a9.js.map": "/ecen260/emulator/static/js/main.52d113a9.js.map"
   },
   "entrypoints": [
-    "static/css/main.5fc3501f.css",
-    "static/js/main.f0c1a8f9.js"
+    "static/css/main.49505bfd.css",
+    "static/js/main.52d113a9.js"
   ]
 }
