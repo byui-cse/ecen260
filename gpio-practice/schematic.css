@@ -1,0 +1,36 @@
+.scope-top{grid-template-columns:1fr}
+.device-visual{--schematic-wire:#8bd8e4;--schematic-text:#bbd3e0;--schematic-accent:#97e4e0;min-height:0;padding:14px 18px}
+.schematic{display:block;width:100%;height:auto;max-height:250px;overflow:visible}
+.schematic text{fill:var(--schematic-text);stroke:none;font-family:'DM Mono',Consolas,monospace;font-size:11px;font-weight:400;letter-spacing:.02em}
+.schematic text.schematic-pin{fill:var(--schematic-accent);font-size:16px;font-weight:700}
+.schematic text.schematic-level{fill:var(--schematic-accent);font-size:12px;font-weight:500}
+.schematic .schematic-wires,.schematic .schematic-pull{stroke:var(--schematic-wire);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.schematic .schematic-wires circle{fill:var(--schematic-wire)}
+.schematic .schematic-resistor{stroke:var(--schematic-wire);stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.schematic .schematic-led-diode{fill:#5595a3;stroke:var(--schematic-wire);stroke-width:2}
+.schematic .schematic-cathode,.schematic .schematic-rays{stroke:var(--schematic-wire);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.schematic .schematic-diode-wire{stroke:var(--schematic-wire);stroke-width:2.4}
+.schematic-lit .schematic-led-diode{fill:#ffd168;stroke:#fff2bd;filter:drop-shadow(0 0 12px #ffd46d)}
+.schematic-lit .schematic-rays{stroke:#ffda77}
+.schematic .schematic-switch{stroke:var(--schematic-wire);stroke-width:3;stroke-linecap:round;cursor:pointer;outline:none}
+.schematic .schematic-switch circle{fill:var(--schematic-wire)}
+.schematic .schematic-switch .switch-hit{fill:transparent;stroke:none}
+.schematic .schematic-switch .switch-lever{stroke:#f3c56b;stroke-width:4}
+.schematic .schematic-switch.closed .switch-lever{stroke:#9de5aa}
+.schematic .schematic-switch:focus-visible .switch-hit{fill:#4ca5b244;stroke:#7dddea;stroke-width:2}
+.schematic text.schematic-note{fill:#8c9eac;font-style:italic}
+.circuit-warning{margin:14px 0 0;padding:12px 14px;border-left:3px solid #f1bc64;border-radius:0 7px 7px 0;background:#493521;color:#ffe5bd;font-size:12px;line-height:1.55}
+.pin-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.pin-summary div{display:flex;flex-direction:column;align-items:flex-start;gap:5px;border-right:1px solid #34465d;border-bottom:0}
+.pin-summary div:last-child{border-right:0}
+html[data-theme="light"] .device-visual{--schematic-wire:#278393;--schematic-text:#486674;--schematic-accent:#116e7e}
+html[data-theme="light"] .schematic .schematic-led-diode{fill:#9ecbd0;stroke:#2c8290}
+html[data-theme="light"] .schematic-lit .schematic-led-diode{fill:#fff2b8;stroke:#a66c10}
+html[data-theme="light"] .schematic .schematic-switch .switch-lever{stroke:#a36d21}
+html[data-theme="light"] .schematic .schematic-switch.closed .switch-lever{stroke:#21815a}
+html[data-theme="light"] .schematic text.schematic-note{fill:#697f89}
+html[data-theme="light"] .circuit-warning{border-color:#d58d24;background:#fff2dd;color:#704716}
+html[data-theme="light"] .pin-summary div{border-color:#e0e9ed}
+@media(max-width:650px){.pin-summary{grid-template-columns:1fr}.pin-summary div{border-right:0;border-bottom:1px solid #34465d}html[data-theme="light"] .pin-summary div{border-color:#e0e9ed}}
+.schematic text.schematic-rail-label{fill:var(--schematic-accent);font-size:16px;font-weight:700}
+.schematic text.schematic-toggle-hint{fill:var(--schematic-text);font-size:12px;font-weight:600}

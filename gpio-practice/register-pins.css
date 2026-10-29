@@ -1,0 +1,7 @@
+.pin-pair-grid{display:grid;grid-template-columns:repeat(32,minmax(18px,1fr));gap:2px;min-width:638px;margin-bottom:4px;font-family:'DM Mono',Consolas,monospace;font-size:10px}
+.section-registers .bit-grid{min-width:638px}
+.register-single-bit .bit-grid .bit-cell:first-child{grid-column:17}
+.pin-pair-label{grid-column:span 2;text-align:center;color:#9db5c9;border-bottom:1px solid #456075;padding-bottom:3px}
+.pin-pair-label.selected-pin-pair{color:#f1d28f;border-color:#d7b15d;font-weight:700}
+html[data-theme="light"] .pin-pair-label{color:#5e7988;border-color:#bdcfd8}
+html[data-theme="light"] .pin-pair-label.selected-pin-pair{color:#936617;border-color:#b58b32}

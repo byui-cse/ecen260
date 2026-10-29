@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html data-theme="light" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>GPIO Code Lab · ECEN 260</title><link href="style.css" rel="stylesheet"/><link href="theme.css" rel="stylesheet"/><link href="schematic.css" rel="stylesheet"/><link href="definitions.css" rel="stylesheet"/><link href="walkthrough.css" rel="stylesheet"/><link href="register-pins.css" rel="stylesheet"/><link href="blue-theme.css" rel="stylesheet"/><link href="dock.css" rel="stylesheet"/></head>
+<body>
+<header class="topbar"><div class="brand"><span>ECEN 260 <b>/ GPIO CODING PRACTICE for the STM32-L476RG</b></span></div><div class="topbar-actions"><a href="https://byui-cse.github.io/ecen260/controlregisters/">Register reference ↗</a><button aria-pressed="false" class="theme-toggle" id="theme-toggle" type="button">☾ <span>Dark theme</span></button></div></header>
+<p class="viewing-note">Maximize this window for best viewing.</p>
+<main>
+<section class="hero"><div><h1>Practice IO Control Register bit manipulation in C.</h1><p>Write and test C code that enables digital I/O using the I/O control registers and watch the registers and connected device respond.</p></div><div class="hero-chip">GPIOA · GPIOB · GPIOC<br/><strong>16 pins per port</strong></div></section>
+<section class="reference-card card" id="reference-card"><div aria-label="Learning and code references" class="reference-topics" role="group"><button aria-controls="teach-topic" aria-expanded="false" class="reference-topic" data-topic="teach-topic" type="button"><span>Teach Me: how GPIO masking works</span><span aria-hidden="true" class="reference-topic-icon">+</span></button><button aria-controls="definitions-topic" aria-expanded="false" class="reference-topic" data-topic="definitions-topic" type="button"><span>Already defined for you</span><span aria-hidden="true" class="reference-topic-icon">+</span></button><button aria-controls="macro-topic" aria-expanded="false" class="reference-topic" data-topic="macro-topic" type="button"><span>Macro expansions for pin <span id="macro-pin">5</span></span><span aria-hidden="true" class="reference-topic-icon">+</span></button></div><div class="reference-panel" hidden="" id="teach-topic">
+<p><strong>Find the bits for a pin.</strong> Each GPIO port has pins 0–15. MODER and PUPDR use two bits per pin: the lower bit is at position <code>2 × pin</code>, and the upper bit is at <code>2 × pin + 1</code>. For pin 5, those are bits 10 and 11. IDR and ODR use one bit per pin, so pin 5 uses bit 5 there.</p>
+<section class="teach-operator"><h3>Why AND clears a bit</h3><p>AND produces <code>0</code> wherever the mask has <code>0</code>, regardless of the old bit: <code>0 &amp; 0 = 0</code> and <code>1 &amp; 0 = 0</code>. Where the mask has <code>1</code>, AND keeps the old bit: <code>0 &amp; 1 = 0</code> and <code>1 &amp; 1 = 1</code>. The <code>~</code> operator flips a mask, putting zeros at the bits you want to clear and ones everywhere else. Thus <code>GPIOA-&gt;MODER &amp;= ~BITPAIR(5);</code> clears only pin 5's two MODER bits. The <code>&amp;=</code> operator stores the AND result back in the register.</p></section>
+<section class="teach-operator"><h3>Why ORR sets a bit</h3><p>ORR produces <code>1</code> wherever the mask has <code>1</code>, regardless of the old bit: <code>0 | 1 = 1</code> and <code>1 | 1 = 1</code>. Where the mask has <code>0</code>, ORR keeps the old bit: <code>0 | 0 = 0</code> and <code>1 | 0 = 1</code>. In C, this operation uses <code>|</code>. Thus <code>GPIOA-&gt;MODER |= LBIT(5);</code> sets only the lower MODER bit for pin 5. The <code>|=</code> operator stores the ORR result back in the register.</p></section>
+<p><strong>Configure MODER.</strong> Input mode is <code>00</code>: clear both bits with <code>GPIOA-&gt;MODER &amp;= ~BITPAIR(5);</code>. Output mode is <code>01</code>: reset the upper bit with <code>GPIOA-&gt;MODER &amp;= ~UBIT(5);</code>, then set the lower bit with <code>GPIOA-&gt;MODER |= LBIT(5);</code>. These masks leave the other pins unchanged.</p>
+<p><strong>Configure PUPDR for a button.</strong> An active-high switch connects the pin to high voltage when pressed. It needs a pull-down when released, so make its PUPDR pair <code>10</code>: clear the lower bit with <code>GPIOA-&gt;PUPDR &amp;= ~LBIT(5);</code>, then set the upper bit with <code>GPIOA-&gt;PUPDR |= UBIT(5);</code>. An active-low switch needs a pull-up, or <code>01</code>: clear the upper bit with <code>GPIOA-&gt;PUPDR &amp;= ~UBIT(5);</code>, then set the lower bit with <code>GPIOA-&gt;PUPDR |= LBIT(5);</code>.</p>
+<p><strong>Read IDR in the supplied if statement.</strong> <code>GPIOA-&gt;IDR &amp; BIT(5)</code> keeps only pin 5's input bit. For an active-high button, <code>(GPIOA-&gt;IDR &amp; BIT(5)) != 0</code> is true when pressed. For an active-low button, use <code>(GPIOA-&gt;IDR &amp; BIT(5)) == 0</code>. IDR is read-only; an assignment to it cannot change the button voltage.</p>
+<p><strong>Write ODR for an LED.</strong> With MODER set to output <code>01</code>, use <code>GPIOA-&gt;ODR |= BIT(5);</code> to make pin 5 high and light the LED. Use <code>GPIOA-&gt;ODR &amp;= ~BIT(5);</code> to make it low and turn the LED off.</p>
+<div class="macro-table"><div><b>BIT(pin)</b><span>one IDR or ODR bit</span></div><div><b>BITPAIR(pin)</b><span>both MODER or PUPDR bits</span></div><div><b>LBIT(pin)</b><span>lower MODER or PUPDR bit</span></div><div><b>UBIT(pin)</b><span>upper MODER or PUPDR bit</span></div></div>
+<p class="subtle">X means a simulated bit is still unknown. A released button without a pull resistor is floating, so its input value cannot be relied on. This practice simulator models the selected GPIO registers and connected device, not the full STM32 setup.</p>
+</div><div class="reference-panel" hidden="" id="definitions-topic"><p>These definitions from <code>drivers.h</code> are available in the practice code area. You do not need to type them.</p><pre><code>#define BIT(x)     (1 &lt;&lt; x)
+#define BITPAIR(x) (0b11 &lt;&lt; (x*2))
+#define UBIT(x)    (0b10 &lt;&lt; (x*2))
+#define LBIT(x)    (0b01 &lt;&lt; (x*2))
+
+// Port struct
+typedef struct{
+    uint32_t MODER;   // offset: 0x00
+    uint32_t OTYPER;  // offset: 0x04
+    uint32_t OSPEEDR; // offset: 0x08
+    uint32_t PUPDR;   // offset: 0x0C
+    uint32_t IDR;     // offset: 0x10
+    uint32_t ODR;     // offset: 0x14
+} Port;
+
+// Port addresses
+#define GPIOA ((Port*) 0x48000000) // base address of GPIO Port A
+#define GPIOB ((Port*) 0x48000400) // base address of GPIO Port B
+#define GPIOC ((Port*) 0x48000800) // base address of GPIO Port C</code></pre></div><div class="reference-panel" hidden="" id="macro-topic"><div class="macro-expansion-list" id="macro-expansion-list"></div></div></section>
+<section aria-labelledby="setup-heading" class="setup card"><div class="section-heading"><span class="step-number">01</span><div><h2 id="setup-heading">Choose a device and pin</h2></div></div><div class="controls"><label>Device<select id="device"><option value="button">Button (input)</option><option value="led">LED (output)</option></select></label><label id="button-type-wrap">Button type<select id="button-type"><option value="high">Active-high</option><option value="low">Active-low</option></select></label><label>Port<select id="port"><option>GPIOA</option><option>GPIOB</option><option>GPIOC</option></select></label><label>Pin<select id="pin"></select></label></div><div class="task" id="task"></div></section>
+
+
+<div class="workspace"><section aria-labelledby="editor-heading" class="editor card"><div class="section-heading editor-heading-row"><span class="step-number">02</span><div><h2 id="editor-heading">Build your program</h2></div></div><div aria-label="Coding mode" class="mode-tabs" role="group"><button class="selected" id="select-mode" type="button">Select the correct lines <small>(easy)</small></button><button id="assemble-mode" type="button">Assemble snippets <small>(medium)</small></button><button id="scratch-mode" type="button">Type from scratch <small>(hard)</small></button></div>
+<div class="editor-content-row"><div class="program-pane"><p class="scope-note">X means the bit is unknown. Gold cells mark the bits for your selected pin. Those bits turn green when configured correctly.</p><div class="code-sections" id="code-sections"></div></div></div>
+<div class="variables" id="variables"></div></section>
+<section aria-labelledby="scope-heading" class="scope card"><div class="scope-top"><div class="device-visual" id="device-visual"></div><div class="pin-status"><strong id="scope-heading">PIN STATUS</strong><div class="pin-summary" id="pin-summary"></div></div></div></section></div>
+</main><footer>ECEN 260 · STM32L476RG GPIO practice</footer><script defer="" src="bundle.js"></script>
+</body></html>
